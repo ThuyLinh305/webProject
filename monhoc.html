@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Môn học - HNMU</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <img src="public/logo.jpg" alt="Logo" class="header-logo">
+            <h2>Quản Lý Môn Học</h2>
+        </div>
+        <div class="header-right">
+            <a href="#" id="userEmailDisplay">guest@example.com</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <ul>
+                <li><a href="main_menu.html"><i class="fa-solid fa-house"></i> Trang Chủ</a></li>
+                <li ><a href="khoa.html"><i class="fa-solid fa-layer-group"></i> Khoa</a></li>
+                <li><a href="nganh.html"><i class="fa-solid fa-code-branch"></i> Ngành</a></li>
+                <li><a href="chuongTrinhDaoTao.html"><i class="fa-solid fa-graduation-cap"></i> CT Đào Tạo</a></li>
+                <li><a href="lop.html"><i class="fa-solid fa-table-cells"></i> Lớp</a></li>
+                <li><a href="sinhvien.html"><i class="fa-solid fa-user-graduate"></i> Sinh Viên</a></li>
+                <li><a href="giangvien.html"><i class="fa-solid fa-chalkboard-user"></i> Giảng Viên</a></li>
+                <li class="active"><a href="monhoc.html"><i class="fa-solid fa-book"></i> Môn Học</a></li>
+                <li><a href="diem.html"><i class="fa-solid fa-star"></i> Điểm</a></li>
+                <li><a href="diemdanh.html"><i class="fa-solid fa-calendar-check"></i> Điểm Danh</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <div class="page-content">
+                <h2
+                    style="color: var(--primary-color); margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 10px;">
+                    Danh sách môn học
+                </h2>
+
+                <div class="toolbar">
+                    <div class="search-group">
+                        <input type="text" class="input-field" placeholder="Tìm kiếm môn học..." style="margin-bottom: 0;">
+                        <button class="btn-search">Tìm kiếm <i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                    <button class="btn-primary" style="width: auto;" onclick="openModal('add')">Thêm mới +</button>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px; text-align: center;">STT</th>
+                            <th style="width: 150px;">Mã Môn</th>
+                            <th>Tên Môn</th>
+                            <th style="width: 120px; text-align: center;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="text-align: center;">1</td>
+                            <td>30TRA138</td>
+                            <td>Tiếng Anh 1</td>
+                            <td style="text-align: center;">
+                                <button class="action-btn btn-edit" title="Sửa"
+                                    onclick="openModal('edit', '30TRA138', 'Tiếng Anh 1')"><i
+                                        class="fa-solid fa-pen-to-square"></i></button>
+                                <button class="action-btn btn-delete" title="Xóa"><i
+                                        class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">2</td>
+                            <td>CCTin</td>
+                            <td>Chứng chỉ tin</td>
+                            <td style="text-align: center;">
+                                <button class="action-btn btn-edit" title="Sửa"
+                                    onclick="openModal('edit', 'CCTin', 'Chứng chỉ tin')"><i
+                                        class="fa-solid fa-pen-to-square"></i></button>
+                                <button class="action-btn btn-delete" title="Xóa"><i
+                                        class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Shared Modal -->
+    <div id="khoaModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header" id="modalTitle">Cập nhật thông tin môn</div>
+            <form>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">Mã Môn</label>
+                    <input type="text" id="modalMaKhoa" class="input-field" placeholder="Nhập mã khoa">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">Tên Môn</label>
+                    <input type="text" id="modalTenKhoa" class="input-field" placeholder="Nhập tên khoa">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Hủy</button>
+                    <button type="submit" class="btn-primary" style="width: auto;" id="modalSubmitBtn">Lưu thông
+                        tin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Auth Check
+        const email = localStorage.getItem('userEmail') || 'guest@example.com';
+        document.getElementById('userEmailDisplay').textContent = email;
+
+        // Modal Logic
+        function openModal(mode, maKhoa = '', tenKhoa = '') {
+            const modal = document.getElementById('khoaModal');
+            const title = document.getElementById('modalTitle');
+            const submitBtn = document.getElementById('modalSubmitBtn');
+            const inputMa = document.getElementById('modalMaKhoa');
+            const inputTen = document.getElementById('modalTenKhoa');
+
+            if (mode === 'add') {
+                title.textContent = 'Thêm khoa mới';
+                submitBtn.textContent = 'Thêm khoa';
+                inputMa.value = '';
+                inputTen.value = '';
+            } else {
+                title.textContent = 'Cập nhật thông tin khoa';
+                submitBtn.textContent = 'Lưu thông tin';
+                inputMa.value = maKhoa;
+                inputTen.value = tenKhoa;
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('khoaModal').style.display = 'none';
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('khoaModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+
+</html>

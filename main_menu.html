@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ - HNMU</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <img src="public/logo.jpg" alt="Logo" class="header-logo">
+            <h2>Trang Chủ</h2>
+        </div>
+        <div class="header-right">
+            <a href="#" id="userEmailDisplay">guest@example.com</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <ul>
+                <li class="active"><a href="main_menu.html"><i class="fa-solid fa-house"></i> Trang Chủ</a></li>
+                <li><a href="khoa.html"><i class="fa-solid fa-layer-group"></i> Khoa</a></li>
+                <li><a href="nganh.html"><i class="fa-solid fa-code-branch"></i> Ngành</a></li>
+                <li><a href="chuongTrinhDaoTao.html"><i class="fa-solid fa-graduation-cap"></i> CT Đào Tạo</a></li>
+                <li><a href="lop.html"><i class="fa-solid fa-table-cells"></i> Lớp</a></li>
+                <li><a href="sinhvien.html"><i class="fa-solid fa-user-graduate"></i> Sinh Viên</a></li>
+                <li><a href="giangvien.html"><i class="fa-solid fa-chalkboard-user"></i> Giảng Viên</a></li>
+                <li><a href="monhoc.html"><i class="fa-solid fa-book"></i> Môn Học</a></li>
+                <li><a href="diem.html"><i class="fa-solid fa-star"></i> Điểm</a></li>
+                <li><a href="diemdanh.html"><i class="fa-solid fa-calendar-check"></i> Điểm Danh</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <div class="banner-container">
+                <img src="public/school.webp" alt="HNMU Banner"
+                    onerror="this.src='https://via.placeholder.com/1200x400/0078d4/FFFFFF?text=Hanoi+Metropolitan+University'">
+            </div>
+            <div class="page-content">
+                <p class="welcome-msg">Chào mừng bạn đã đến với trang web quản lý sinh viên !</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Auth Check
+        const email = localStorage.getItem('userEmail') || 'guest@example.com';
+        document.getElementById('userEmailDisplay').textContent = email;
+    </script>
+</body>
+
+</html>

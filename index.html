@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - HNMU</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 2px solid var(--primary-color);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .error-msg {
+            color: #d32f2f;
+            background: #fdecea;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="login-body">
+    <div class="login-card">
+        <img src="public/logo.jpg" alt="Logo" class="login-logo">
+        <h2 style="color: var(--primary-color); margin-bottom: 5px;">Quản Lý Sinh Viên</h2>
+        <p style="color: #666; margin-bottom: 25px;">Đăng nhập để tiếp tục</p>
+
+        <form id="loginForm">
+            <div class="error-msg" id="errorMsg">Thông tin đăng nhập không chính xác.</div>
+
+            <div style="text-align: left;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">Email</label>
+                <input type="email" id="email" class="input-field" placeholder="guest@example.com" required>
+            </div>
+
+            <div style="text-align: left;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 500;">Mật khẩu</label>
+                <input type="password" id="password" class="input-field" placeholder="password" required>
+            </div>
+
+            <button type="submit" class="btn-primary">Đăng Nhập</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (email === 'guest@example.com' && password === 'password') {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                window.location.href = 'main_menu.html';
+            } else {
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = 'Sai tài khoản hoặc mật khẩu (Thử guest@example.com / password)';
+            }
+        });
+    </script>
+</body>
+
+</html>
