@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Sinh Viên - HNMU</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* --- Content Area --- */
+        .content {
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+            margin: 15px;
+            border-radius: 4px;
+            overflow-y: auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .content h2 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* Layout Form */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        .form-group label span {
+            color: red;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            outline: none;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        /* --- Validation Styles --- */
+        .is-invalid {
+            border: 1px solid #dc3545 !important;
+            background-color: #fff8f8 !important;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 11px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        /* Phần ảnh sinh viên */
+        .image-upload-section {
+            grid-column: 1 / 2;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 180px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            border-radius: 4px;
+        }
+
+        /* Tiêu đề các mục con */
+        .section-divider {
+            grid-column: 1 / -1;
+            margin: 25px 0 15px;
+            padding: 8px 12px;
+            background: #f1f3f5;
+            border-left: 5px solid #0084ff;
+            font-weight: bold;
+            font-size: 14px;
+            color: #1a4b7c;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Nút bấm cuối trang */
+        .btn-footer {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .btn-save {
+            background-color: #007bff;
+        }
+
+        .btn-cancel {
+            background-color: #e74c3c;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <img src="public/logo.jpg" alt="Logo" class="header-logo">
+            <h2>Cập nhật Sinh viên</h2>
+        </div>
+        <div class="header-right">
+            <a href="#" id="userEmailDisplay">guest@example.com</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <ul>
+                <li><a href="main_menu.html"><i class="fa-solid fa-house"></i> Trang Chủ</a></li>
+                <li><a href="khoa.html"><i class="fa-solid fa-layer-group"></i> Khoa</a></li>
+                <li><a href="nganh.html"><i class="fa-solid fa-code-branch"></i> Ngành</a></li>
+                <li><a href="chuongTrinhDaoTao.html"><i class="fa-solid fa-graduation-cap"></i> CT Đào Tạo</a></li>
+                <li><a href="lop.html"><i class="fa-solid fa-table-cells"></i> Lớp</a></li>
+                <li class="active"><a href="sinhvien.php"><i class="fa-solid fa-user-graduate"></i> Sinh Viên</a></li>
+                <li><a href="giangvien.html"><i class="fa-solid fa-chalkboard-user"></i> Giảng Viên</a></li>
+                <li><a href="monhoc.html"><i class="fa-solid fa-book"></i> Môn Học</a></li>
+                <li><a href="diem.html"><i class="fa-solid fa-star"></i> Điểm</a></li>
+                <li><a href="diemdanh.html"><i class="fa-solid fa-calendar-check"></i> Điểm Danh</a></li>
+
+            </ul>
+        </aside>
+
+        <main class="content">
+            <?php
+            require_once 'db_connect.php';
+
+            $student = null;
+            // Lấy ID sinh viên từ URL (ví dụ: capnhatsinhvien.php?id=1520194031)
+            $maSV = $_GET['id'] ?? '';
+
+            if ($maSV) {
+                $stmt = $conn->prepare("SELECT * FROM sinh_vien WHERE ma_sv = ?");
+                $stmt->execute([$maSV]);
+                $student = $stmt->fetch(PDO::FETCH_ASSOC);
+            }
+
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $maSV_new = $_POST['maSV'];
+                $hoTen = $_POST['hoTen'];
+                $ngaySinh = $_POST['ngaySinh'];
+                // Lưu ID cũ để xác định dòng cần update
+                $maSV_original = $_POST['maSV_original'];
+
+                try {
+                    $sql = "UPDATE sinh_vien SET ma_sv = ?, ho_ten = ?, ngay_sinh = ? WHERE ma_sv = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->execute([$maSV_new, $hoTen, $ngaySinh, $maSV_original]);
+                    
+                    echo "<script>alert('Cập nhật thành công!'); window.location.href='sinhvien.php';</script>";
+                } catch(PDOException $e) {
+                    echo "<script>alert('Lỗi: " . addslashes($e->getMessage()) . "');</script>";
+                }
+            }
+            ?>
+
+            <h2>Cập nhật thông tin sinh viên</h2>
+
+            <?php if ($student): ?>
+            <form id="studentForm" method="POST" action="">
+                <!-- Input hidden chứa ID cũ -->
+                <input type="hidden" name="maSV_original" value="<?php echo htmlspecialchars($student['ma_sv']); ?>">
+
+                <div class="form-row">
+                    <div class="image-upload-section">
+                        <label>Ảnh sinh viên</label>
+                        <div class="image-preview"><i class="fa-solid fa-camera fa-2x"></i></div>
+                        <input type="file" style="border:none; background:none; padding:0;">
+                    </div>
+
+                    <div class="info-fields">
+                        <div class="form-group">
+                            <label>Mã sinh viên <span>*</span></label>
+                            <input type="text" name="maSV" id="maSV" value="<?php echo htmlspecialchars($student['ma_sv']); ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Họ và tên <span>*</span></label>
+                            <input type="text" name="hoTen" id="hoTen" value="<?php echo htmlspecialchars($student['ho_ten']); ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Giới tính <span>*</span></label>
+                            <select id="gioiTinh" name="gioiTinh">
+                                <option value="">Chọn giới tính</option>
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ngày sinh <span>*</span></label>
+                            <input type="date" name="ngaySinh" id="ngaySinh" value="<?php echo htmlspecialchars($student['ngay_sinh']); ?>" required>
+                        </div>
+                    </div>
+
+                    <!-- Các trường khác giữ nguyên HTML tĩnh cho đến khi DB có cột tương ứng -->
+                    <div class="form-row">
+                        <div class="form-group"><label>Niên khóa</label><input type="text" placeholder="2019-2020"></div>
+                        <div class="form-group"><label>Nơi sinh</label><input type="text" placeholder="Số nhà, Đường, Xã/huyện/tỉnh"></div>
+                    </div>
+
+                    <div class="btn-footer">
+                        <button type="submit" class="btn btn-save">Lưu thay đổi <i class="fa-solid fa-floppy-disk"></i></button>
+                        <button type="button" class="btn btn-cancel" onclick="location.href='sinhvien.php'">Hủy bỏ <i class="fa-solid fa-xmark"></i></button>
+                    </div>
+            </form>
+            <?php else: ?>
+                <p style="color:red; padding:20px;">Không tìm thấy sinh viên có Mã: <?php echo htmlspecialchars($maSV); ?></p>
+                <button type="button" class="btn btn-cancel" onclick="location.href='sinhvien.php'">Quay lại</button>
+            <?php endif; ?>
+        </main>
+    </div>
+</body>
+
+</html>
